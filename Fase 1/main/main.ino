@@ -21,7 +21,8 @@ LiquidCrystal lcd(46, 47, 48, 49, 50, 51);
 
 enum Estado {
   NINGUNO,
-  FOTOCELDA
+  FOTOCELDA,
+  MOSTRARINFO
 };
 
 Estado ESTADO;
@@ -47,7 +48,7 @@ const float areaFotocelda = 1.0;  // cm^2
 
 bool puedeLeerFotocelda = true;
 long unsigned tiempoFotocelda = 0;
-int tiempoEsperaFotocelda = 5000;
+int tiempoEsperaFotocelda = 4000;
 
 const long A = 1000;  //Resistencia en oscuridad en KΩ
 const int B = 15;     //Resistencia a la luz (10 Lux) en KΩ
@@ -96,6 +97,8 @@ void loop() {
     lcd.print("boton...");
   } else if (ESTADO == FOTOCELDA) {
     fotocelda();
+  } else if (ESTADO == MOSTRARINFO){
+    mostrarDatosEEPROM();
   }
 }
 
@@ -148,8 +151,7 @@ void fun1() {
 }
 
 void fun2() {
-  Serial.println("Boton 2");
-  delay(1000);
+  ESTADO = MOSTRARINFO;
 }
 
 void fun3() {
@@ -166,7 +168,7 @@ void fun4() {
   lcd.print(" PPM");
   lcd.println("           ");
   lcd.print("  ");
-  delay(5000);  //   esperamos 5 segundos para visualizar la información
+  delay(4000);  //   esperamos 5 segundos para visualizar la información
   lcd.clear();
 }
 
@@ -203,7 +205,7 @@ void fun6() {
     lcd.setCursor(0, 1);
     lcd.print("  movimiento");
   }
-  delay(5000);  //Hacemos una pausa de 100ms
+  delay(4000);  //Hacemos una pausa de 100ms
   lcd.clear();
 }
 
@@ -239,14 +241,65 @@ void guardarDatos() {
 
   lcd.clear();
   writeLine(0,"Datos Guardados");
-  writeLine(1,"Exitosamente");
+  writeLine(1," Exitosamente");
   delay(2000);
   lcd.clear();
 }
 
 void mostrarDatosEEPROM(){
 
+    float lumens;
+    bool movimiento;
+    float temperatura;
+    float humedad;
+    float ppm;
 
+    EEPROM.get(EEPROM_START_TEMPERATURA, temperatura); 
+    EEPROM.get(EEPROM_START_LUZ, lumens); 
+    EEPROM.get(EEPROM_START_PROXIMIDAD, movimiento); 
+    EEPROM.get(EEPROM_START_HUMEDAD, humedad); 
+    EEPROM.get(EEPROM_START_CO2, ppm);
+
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Temperatura:");
+    lcd.setCursor(0,1);
+    lcd.print(temperatura);
+    lcd.print(" 'C");
+    delay(2500);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Humedad:");
+    lcd.setCursor(0,1);
+    lcd.print(humedad);
+    lcd.print(" %");
+    delay(2500);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Calidad de Aire:");
+    lcd.setCursor(0,1);
+    lcd.print(ppm);
+    lcd.print(" PPM");
+    delay(2500);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Cantidad de luz:");
+    lcd.setCursor(0,1);
+    lcd.print(lumens);
+    lcd.print(" Lumens");
+    delay(2500);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    if(movimiento){
+      lcd.print("Hubo Movimiento");
+    }else{
+      lcd.print("  No Hubo");
+      lcd.setCursor(0,1);
+      lcd.print("Movimiento");
+    }
+    delay(2500);
+    lcd.clear();
+    ESTADO = NINGUNO;
 }
 
 float getLumens() {
@@ -279,11 +332,12 @@ bool getMovimiento() {
 
 float getPartPerMillon(){
   int val = analogRead(analogMq135);
-  // Ajusta estos valores según las especificaciones de tu sensor
+
+
   float A = 116.6020682;
   float B = -2.769034857;
 
-  // Resistencia en aire limpio (ajusta según las especificaciones de tu sensor)
+  // Resistencia en aire limpio
   float R0 = 76.63;
 
   // Calcula la resistencia del sensor
