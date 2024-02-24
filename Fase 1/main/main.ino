@@ -143,7 +143,7 @@ void fun3() {
 
 void fun4() {
   lcd.clear();
-  lecturaMQ135 = analogRead(0);  //   read analog input pin 0
+  lecturaMQ135 = analogRead(0);  //   se lee el input analogo
   lcd.setCursor(0, 0);
   lcd.print("Calidad de Aire: ");
   lcd.setCursor(0, 1);
@@ -164,14 +164,17 @@ void fun5() {
     Serial.println("No se reconocen datos en el sensor DHT11");
     return;
   }
-
-  Serial.print("Humedad: ");
-  Serial.print(humedad);
-  Serial.println("%");
-  Serial.print("Temperatura: ");
-  Serial.print(temperatura);
-  Serial.println("°C");
-  delay(1000);
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Humedad: ");
+  lcd.print(humedad);
+  lcd.print("%");
+  lcd.setCursor(0,1);
+  lcd.print("Temp: ");
+  lcd.print(temperatura);
+  lcd.print(" 'C");
+  delay(5000);
+  lcd.clear();
 }
 
 void fun6() {
