@@ -144,8 +144,7 @@ void verificarBotones() {
 }
 
 void fun1() {
-  Serial.println("Boton 1");
-  delay(1000);
+  guardarDatos();
 }
 
 void fun2() {
@@ -231,12 +230,29 @@ void guardarDatos() {
   float humedad = dht.readHumidity();
   float temperatura = dht.readTemperature();
   float ppm = getPartPerMillon();
+
+  EEPROM.put(EEPROM_START_TEMPERATURA, temperatura);  //Escribir (direccion_inicial, valor)
+  EEPROM.put(EEPROM_START_HUMEDAD, humedad);
+  EEPROM.put(EEPROM_START_LUZ, lumens);
+  EEPROM.put(EEPROM_START_CO2, ppm);
+  EEPROM.put(EEPROM_START_PROXIMIDAD, movimiento);
+
+  lcd.clear();
+  writeLine(0,"Datos Guardados");
+  writeLine(1,"Exitosamente");
+  delay(2000);
+  lcd.clear();
+}
+
+void mostrarDatosEEPROM(){
+
+
 }
 
 float getLumens() {
   int V = analogRead(analogFotocelda);
 
-  return ((long)(1024 - V) * A * 10) / ((long)B * Rc * V);  //usar si LDR entre GND y A0
+  return ((long)(1024 - V) * A * 10) / ((long)B * Rc * V);
 }
 
 bool getMovimiento() {
