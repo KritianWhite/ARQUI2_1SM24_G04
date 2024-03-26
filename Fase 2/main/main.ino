@@ -74,11 +74,7 @@ void reconnectClient() {
     if (client.connect(clientId.c_str())) {
       client.publish("g4outTopic", "conexion exitosa");
       suscribirse("g4inTopic");
-      Serial.println("Suscripción realizada");
     } else {
-      Serial.print("[FALLO] [ rc = ");
-      Serial.print(client.state());
-      Serial.println(" : reintentando en 5 segundos]");
       delay(5000);
     }
   }
@@ -149,7 +145,6 @@ void sendDataTemp() {
   char attributes[100];
   payload.toCharArray(attributes, 100);
   client.publish("g4Temperatura", attributes);
-  Serial.println(attributes);
 }
 
 //Función para enviar datos de humedad
@@ -160,7 +155,6 @@ void sendDataHum() {
   char attributes[100];
   payload.toCharArray(attributes, 100);
   client.publish("g4Humedad", attributes);
-  Serial.println(attributes);
 }
 
 //Función para enviar datos de CO2
@@ -171,7 +165,6 @@ void sendDataCO2() {
   char attributes[100];
   payload.toCharArray(attributes, 100);
   client.publish("g4CO2", attributes);
-  Serial.println(attributes);
 }
 
 //Función para enviar datos de luz
@@ -182,7 +175,6 @@ void sendDataLuz() {
   char attributes[100];
   payload.toCharArray(attributes, 100);
   client.publish("g4Luz", attributes);
-  Serial.println(attributes);
 }
 
 //Función para enviar datos de movimiento
@@ -193,12 +185,10 @@ void sendDataMov() {
   char attributes[100];
   payload.toCharArray(attributes, 100);
   client.publish("g4Movimiento", attributes);
-  Serial.println(attributes);
 }
 
 //Función para enviar datos a un topic
 void sendDataTopic(String data) {
-  Serial.println("sendDataTopic");
   // Prepare a JSON payload String
   String payload = data;
 
@@ -206,7 +196,6 @@ void sendDataTopic(String data) {
   char attributes[100];
   payload.toCharArray(attributes, 100);
   client.publish("g4outTopic", attributes);
-  Serial.println(attributes);
 }
 
 //Inicializamos la conexión a la red wifi
@@ -218,7 +207,6 @@ void InitWiFi() {
   //Verificamos si se pudo realizar la conexión al wifi
   //si obtenemos un error, lo mostramos por log y denememos el programa
   if (WiFi.status() == WL_NO_SHIELD) {
-    Serial.println("El modulo WiFi no esta presente");
     while (true)
       ;
   }
@@ -226,20 +214,14 @@ void InitWiFi() {
 }
 
 void reconnectWifi() {
-  Serial.println("Iniciar conección a la red WIFI");
   while (status != WL_CONNECTED) {
-    Serial.print("Intentando conectarse a WPA SSID: ");
-    Serial.println(WIFI_AP);
     //Conectar a red WPA/WPA2
     status = WiFi.begin(WIFI_AP, WIFI_PASSWORD);
     delay(500);
   }
-  Serial.println("Conectado a la red WIFI");
 }
 
 // Función para suscribirse a un topic
 void suscribirse(const char* topic) {
   client.subscribe(topic);
-  Serial.print("Suscrito a: ");
-  Serial.println(topic);
 }
