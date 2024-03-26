@@ -11,17 +11,44 @@
   justify-content: center;
 }
 
-.home-title{
+.home-title {
   font-family: 'Asul', sans-serif;
   font-size: 2rem;
-  margin: 3rem 0;
+  margin: 0.1rem 0;
   text-align: center;
   position: relative;
 }
 
-.container-nav{
+.container-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 62px;
+}
+
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  /* Permite que los botones se envuelvan cuando no haya suficiente espacio */
+  justify-content: center;
+  /* Centra los botones horizontalmente */
+}
+
+.boton {
+  padding: 10px 20px;
+  margin: 5px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Añade sombra al botón */
+  transition: background-color 0.3s ease;
+  /* Transición suave para el color de fondo */
+}
+
+.boton:hover {
+  background-color: #2980b9;
+  /* Cambia el color de fondo al pasar el mouse */
 }
