@@ -3,7 +3,7 @@ import serial
 import paho.mqtt.client as mqtt
 
 # Create a serial connection
-ser = serial.Serial('COM7', 115200)  # Replace 'COM1' with the appropriate serial port
+ser = serial.Serial('COM3', 115200) 
 
 # Callback function for when the client receives a CONNACK response from the server
 def on_connect(client, userdata, flags, rc):

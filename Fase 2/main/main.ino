@@ -33,12 +33,34 @@ unsigned long lastSend;
 int status = WL_IDLE_STATUS;
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Mensaje recibido bajo el tema: ");
-  Serial.println(topic);
-
-  Serial.print("Mensaje:");
+  Serial.print("Mensaje recibido [");
+  Serial.print(topic);
+  Serial.print("] ");
   for (int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
+  }
+  Serial.println();
+  if (String(topic) == "g4inTopic") {
+    String message = String((char*)payload);
+    if (message == "1") {
+      sendDataTemp();
+    } else if (message == "2") {
+      sendDataHum();
+    } else if (message == "3") {
+      sendDataCO2();
+    } else if (message == "4") {
+      sendDataLuz();
+    } else if (message == "5") {
+      sendDataMov();
+    } else if (message == "6") {
+      sendDataTopic(" se recibió guardar eeeprom");
+    } else if (message == "7") {
+      sendDataTopic(" se recibió guardar eeeprom");
+    } else if (message == "8") {
+      sendDataTopic(" se recibio encender ventilador");
+    } else if (message == "9") {
+      sendDataTopic(" se recibio apagar ventilador");
+    }
   }
 }
 
@@ -51,8 +73,8 @@ void reconnectClient() {
     String clientId = "mqttx_28c75910";
     if (client.connect(clientId.c_str())) {
       client.publish("g4outTopic", "conexion exitosa");
-      // ... and resubscribe
-      client.subscribe("g4inTopic");
+      suscribirse("g4inTopic");
+      Serial.println("Suscripción realizada");
     } else {
       Serial.print("[FALLO] [ rc = ");
       Serial.print(client.state());
@@ -72,6 +94,7 @@ void setup() {
   //Colocamos la referencia del servidor y el puerto
   client.setServer(server, 1883);
   client.setCallback(callback);
+  client.setKeepAlive(60);
   dht.begin();
   //Iniciamos la conexión a la red WiFi
   InitWiFi();
@@ -80,11 +103,11 @@ void setup() {
 
 void loop() {
   //Validamos si el modulo WiFi aun esta conectado a la red
-  /*status = WiFi.status();
+  status = WiFi.status();
     if(status != WL_CONNECTED) {
         //Si falla la conexión, reconectamos el modulo
         reconnectWifi();
-    }*/
+    }
 
   //Validamos si esta la conexión del servidor
   if (!client.connected()) {
@@ -216,10 +239,7 @@ void reconnectWifi() {
 
 // Función para suscribirse a un topic
 void suscribirse(const char* topic) {
-  //client.publish("g4outTopic", "prueba de publish");
-  if (!client.subscribe(topic)) {
-    Serial.println("Fallo al suscribirse al topic");
-  } else {
-    Serial.println("Suscrito al topic " + String(topic));
-  }
+  client.subscribe(topic);
+  Serial.print("Suscrito a: ");
+  Serial.println(topic);
 }
