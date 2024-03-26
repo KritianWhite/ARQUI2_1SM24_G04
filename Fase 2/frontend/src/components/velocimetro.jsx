@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import GaugeChart from 'react-gauge-chart'
 import './styles/general.css';
 
