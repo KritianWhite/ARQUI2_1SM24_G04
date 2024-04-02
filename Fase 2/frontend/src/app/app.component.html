@@ -1,6 +1,6 @@
-<div class="home-container">
+<div class="home-container" style="padding-top: 100px;">
   
-  <mat-card class="configCard">
+  <mat-card class="configCard" style="background-color: rgb(231, 226, 226);">
     <div class="emq-title">Conectar a Broker</div>
     <mat-grid-list cols="8" rowHeight="4:1">
       <mat-grid-tile>
@@ -12,7 +12,7 @@
     </mat-grid-list>
   </mat-card>
 
-  <mat-card class="subscriptionCard">
+  <mat-card class="subscriptionCard"  style="background-color: rgb(231, 226, 226);">
     <div class="emq-title">Sensores</div>
 
     <mat-grid-list cols="8" rowHeight="4:1">
@@ -40,15 +40,66 @@
       <mat-grid-tile>
         <button className="boton" mat-raised-button color="primary" (click)="doPublish('8', 'Ventilador')">{{ subscribeSuccess ? 'Visualizando' : 'Ventilador' }}</button>
       </mat-grid-tile>
-      <mat-grid-tile>
-          <label>{{ sensorValor}}</label>
-      </mat-grid-tile>
+      <br>
 
     </mat-grid-list>
   </mat-card>
 
+  <mat-card class="publishCard"  style="background-color: rgb(231, 226, 226);" >
+    <div class="emq-title" ngIf="mostrarGrafica" style="display: inline-block; max-width: 25%;">
 
-  <mat-card class="publishCard">
+      <div class="emq-title">{{tituloGrafica}}</div>
+      <circle-progress
+        [percent]=porcentaje
+        [radius]="100"
+        [outerStrokeWidth]="16"
+        [innerStrokeWidth]="8"
+        [outerStrokeColor]="'#78C000'"
+        [innerStrokeColor]="'#C7E596'"
+        [animation]="true"
+        [animationDuration]="300"
+        [title]="'' + sensorValor"
+        [titleColor]="'#000000'"
+        [unitsFontSize]="'16'"
+        [showUnits]="true"
+        [units]="'km/h'"
+        [showSubtitle]="false"
+        [showBackground]="true"
+        [backgroundGradientStopColor]="'#e0e0e0'"
+        [backgroundOpacity]="1"
+        [backgroundStroke]="'#d0d0d0'"
+        [backgroundStrokeWidth]="16"
+        [outerStrokeLinecap]="'butt'"
+        [showInnerStroke]="true"
+        [startFromZero]="false"
+        [showTitle]="true"
+        [titleFontSize]="'24'"
+        [titleFontWeight]="'bold'"
+        [titleColor]="'#000000'"
+        [max]="150" 
+      ></circle-progress>
+
+    </div>
+    <div class="emq-title" ngIf="mostrarTabla" style="display: inline-block; max-width: 25%;">
+      <table>
+        <thead>
+          <tr>
+            <th>Parametro</th>
+            <th>Medida</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let medida of medidas">
+            <td>{{ item.nombre }}</td>
+            <td>{{ item.dato }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </mat-card>
+
+  <mat-card class="publishCard"  style="background-color: rgb(231, 226, 226);">
     <div class="emq-title">Motor</div>
     <form class="config-form">
       <mat-grid-list cols="4" rowHeight="4:1">

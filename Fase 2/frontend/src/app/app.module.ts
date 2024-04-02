@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -10,6 +10,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { IMqttServiceOptions, MqttModule } from 'ngx-mqtt';
+import { NgCircleProgressModule } from 'ng-circle-progress';
 
 export const connection: IMqttServiceOptions = {
   // Broker
@@ -39,8 +40,10 @@ export const connection: IMqttServiceOptions = {
     MatGridListModule,
     MatButtonModule,
     MatSelectModule,
-    MqttModule.forRoot(connection)
+    MqttModule.forRoot(connection),
+    NgCircleProgressModule.forRoot({})
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { NgCircleProgressModule } from 'ng-circle-progress';
+
 import {
   IMqttMessage,
   IMqttServiceOptions,
@@ -7,6 +9,7 @@ import {
 } from 'ngx-mqtt';
 import { IClientSubscribeOptions } from 'mqtt-browser';
 import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-root',
@@ -56,7 +59,14 @@ export class AppComponent {
   subscribeSuccess = false;
 
   sensorValor = 0;
-
+  porcentaje = 0;
+  tituloGrafica = '';
+  unidadMedida = '';
+  escala = {min: 0, max: 0};
+  mostrarGrafica = false;
+  mostrarTabla = false;
+  medidas = [];
+ 
   jsonObject: any;
 
   // Crear Conexion con el Broker 
@@ -94,17 +104,66 @@ export class AppComponent {
       console.log('Suscripcion al Topic - Respuesta:', message.payload.toString())
       this.jsonObject = JSON.parse(message.payload.toString());
       if(this.jsonObject.temperatura !== undefined ){
+        
         this.sensorValor =  this.jsonObject.temperatura;
+        this.tituloGrafica = 'Temperatura';
+        this.unidadMedida = '';
+        this.escala.min = 0;
+        this.escala.max = 0;
+        this.porcentaje = (parseFloat(this.sensorValor.toString()) * 100)/parseFloat(this.escala.max.toString());
+        this.mostrarGrafica = true;
+
+
       }else if(this.jsonObject.humedad !== undefined){
+
         this.sensorValor = this.jsonObject.humedad;
+        this.tituloGrafica = 'Humedad';
+        this.unidadMedida = '';
+        this.escala.min = 0;
+        this.escala.max = 0;
+        this.porcentaje = (parseFloat(this.sensorValor.toString()) * 100)/parseFloat(this.escala.max.toString());
+        this.mostrarGrafica = true;
+
       }else if(this.jsonObject.co2 !== undefined){
+
         this.sensorValor = this.jsonObject.co2;
+        this.tituloGrafica = 'CO2';
+        this.unidadMedida = '';
+        this.escala.min = 0;
+        this.escala.max = 10000;
+        this.porcentaje = (parseFloat(this.sensorValor.toString()) * 100)/parseFloat(this.escala.max.toString());
+        this.mostrarGrafica = true;
+
       }else if(this.jsonObject.luz !== undefined){
+
         this.sensorValor = this.jsonObject.luz;
+        this.tituloGrafica = 'Luz'
+        this.unidadMedida = '';
+        this.escala.min = 0;
+        this.escala.max = 0;
+        this.porcentaje = (parseFloat(this.sensorValor.toString()) * 100)/parseFloat(this.escala.max.toString());
+        this.mostrarGrafica = true;
+
       }else if(this.jsonObject.mov !== undefined){
+
         this.sensorValor = this.jsonObject.mov;
+        this.tituloGrafica = 'Movimiento'
+        this.unidadMedida = '';
+        this.escala.min = 0;
+        this.escala.max = 0;
+        this.porcentaje = (parseFloat(this.sensorValor.toString()) * 100)/parseFloat(this.escala.max.toString());
+        this.mostrarGrafica = true;
+
       }else{
+
         this.sensorValor = 0;
+        this.tituloGrafica = ''
+        this.unidadMedida = '';
+        this.escala.min = 0;
+        this.escala.max = 0;
+        this.porcentaje = (parseFloat(this.sensorValor.toString()) * 100)/parseFloat(this.escala.max.toString());
+        this.mostrarGrafica = true;
+
       }
       console.log('Valor del sensor:', this.sensorValor)
       this.doUnSubscribe();
