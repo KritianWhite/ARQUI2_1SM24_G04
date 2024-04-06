@@ -77,7 +77,6 @@ void reconnectClient()
     if (client.connect(clientId.c_str()))
     {
       client.publish("g4outTopic", "conexion exitosa");
-      suscribirse("g4inTopic");
     }
     else
     {

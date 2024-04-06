@@ -10,6 +10,10 @@ import {
 import { IClientSubscribeOptions } from 'mqtt-browser';
 import { Subscription } from 'rxjs';
 
+export interface Metrica {
+  nombre: string;
+  valor: string;
+}
 
 @Component({
   selector: 'app-root',
@@ -65,9 +69,25 @@ export class AppComponent {
   escala = {min: 0, max: 0};
   mostrarGrafica = false;
   mostrarTabla = false;
-  medidas = [];
- 
+  mostrarMensaje = false;
+  medidas : Metrica[] = [];
+  medidas2 : Metrica[] = [
+    {nombre: 'Temperatura', valor: '0'},
+    {nombre: 'Humedad', valor: '0'},
+    {nombre: 'CO2', valor: '0'},
+    {nombre: 'Luz', valor: '0'},
+    {nombre: 'Movimiento', valor: '0'}
+  ];
+  mostrarUnidades = true;
+  displayedColumns: string[] = ['nombre', 'valor'];
   jsonObject: any;
+  mensaje: string = '';
+  estiloMensaje = {
+    'background-color': 'rgba(93, 225, 255, 0.8)',
+    'color': 'white',
+    'font-size': 'large',
+    'text-align': 'center',
+  }
 
   // Crear Conexion con el Broker 
   createConnection() {
@@ -95,6 +115,8 @@ export class AppComponent {
     })
   }
 
+
+
   // Suscribirse a un Topic
   doSubscribe(topic: string) { 
     const qos = 0;
@@ -107,9 +129,9 @@ export class AppComponent {
         
         this.sensorValor =  this.jsonObject.temperatura;
         this.tituloGrafica = 'Temperatura';
-        this.unidadMedida = '';
+        this.unidadMedida = ' C°';
         this.escala.min = 0;
-        this.escala.max = 0;
+        this.escala.max = 100;
         this.porcentaje = (parseFloat(this.sensorValor.toString()) * 100)/parseFloat(this.escala.max.toString());
         this.mostrarGrafica = true;
 
@@ -117,20 +139,20 @@ export class AppComponent {
       }else if(this.jsonObject.humedad !== undefined){
 
         this.sensorValor = this.jsonObject.humedad;
-        this.tituloGrafica = 'Humedad';
-        this.unidadMedida = '';
+        this.tituloGrafica = 'Porcentaje de Humedad';
+        this.unidadMedida = ' %';
         this.escala.min = 0;
-        this.escala.max = 0;
-        this.porcentaje = (parseFloat(this.sensorValor.toString()) * 100)/parseFloat(this.escala.max.toString());
+        this.escala.max = 100;
+        this.porcentaje = (parseFloat(this.sensorValor.toString()));
         this.mostrarGrafica = true;
 
       }else if(this.jsonObject.co2 !== undefined){
 
         this.sensorValor = this.jsonObject.co2;
-        this.tituloGrafica = 'CO2';
-        this.unidadMedida = '';
+        this.tituloGrafica = 'Dióxido de Carbono (CO2)';
+        this.unidadMedida = ' ppm';
         this.escala.min = 0;
-        this.escala.max = 10000;
+        this.escala.max = 5000;
         this.porcentaje = (parseFloat(this.sensorValor.toString()) * 100)/parseFloat(this.escala.max.toString());
         this.mostrarGrafica = true;
 
@@ -138,19 +160,23 @@ export class AppComponent {
 
         this.sensorValor = this.jsonObject.luz;
         this.tituloGrafica = 'Luz'
-        this.unidadMedida = '';
+        this.unidadMedida = ' Lumens';
         this.escala.min = 0;
-        this.escala.max = 0;
+        this.escala.max = 1000;
         this.porcentaje = (parseFloat(this.sensorValor.toString()) * 100)/parseFloat(this.escala.max.toString());
         this.mostrarGrafica = true;
 
       }else if(this.jsonObject.mov !== undefined){
-
-        this.sensorValor = this.jsonObject.mov;
+        if(this.jsonObject.mov === 1){
+          this.unidadMedida = "Si hay movimiento";
+        }else{
+          this.unidadMedida = "No hay movimiento";
+        }
         this.tituloGrafica = 'Movimiento'
-        this.unidadMedida = '';
         this.escala.min = 0;
-        this.escala.max = 0;
+        this.escala.max = 1;
+        this.mostrarUnidades = false;
+        this.sensorValor = this.jsonObject.mov;
         this.porcentaje = (parseFloat(this.sensorValor.toString()) * 100)/parseFloat(this.escala.max.toString());
         this.mostrarGrafica = true;
 
@@ -178,6 +204,10 @@ export class AppComponent {
 
   // Publicar un Topic
   doPublish(action: string, topic2: string) {
+    this.mostrarGrafica = false;
+    this.mostrarUnidades = true;
+    this.mostrarTabla = false;
+    this.mostrarMensaje = false;
     console.log("action", action)
     this.publish.payload = action
 
@@ -188,11 +218,152 @@ export class AppComponent {
     this.doSubscribe(topic2)
   }
 
+  guardarEEPROM() {
+    this.mostrarGrafica = false;
+    this.mostrarUnidades = true;
+    this.mostrarTabla = false;
+    this.mostrarMensaje = false;
+    console.log("action", "6")
+    this.publish.payload = "6"
+    const { topic, qos, payload } = this.publish
+    console.log(this.publish)
+    this.client?.unsafePublish(topic, payload, { qos } as IPublishOptions)
+    this.subscribeGuardarEEPROM();
+  }
+
+  subscribeGuardarEEPROM() { 
+    const qos = 0;
+    const topic = "g4Eeprom";
+    console.log('Subscribiendo al Topic:', topic)
+    this.curSubscription = this.client?.observe(topic, { qos } as IClientSubscribeOptions).subscribe((message: IMqttMessage) => {
+      
+      console.log('Suscripcion al Topic - Respuesta:', message.payload.toString())
+      this.jsonObject = JSON.parse(message.payload.toString());
+      if(this.jsonObject.mensaje !== undefined){
+        this.mensaje = this.jsonObject.mensaje;
+        this.estiloMensaje['background-color'] = 'rgba(40, 219, 36, 0.8)';
+        this.mostrarMensaje = true;
+      }else{
+        this.mensaje = "Error al guardar en la EEPROM";
+        this.estiloMensaje['background-color'] = 'rgba(219, 36, 36, 0.8)';
+        this.mostrarMensaje = true;
+      }
+      this.doUnSubscribe();
+    })
+  }
+
+  ventilador(){
+    this.mostrarGrafica = false;
+    this.mostrarUnidades = true;
+    this.mostrarTabla = false;
+    this.mostrarMensaje = false;
+    console.log("action", "8")
+    this.publish.payload = "8"
+    const { topic, qos, payload } = this.publish
+    console.log(this.publish)
+    this.client?.unsafePublish(topic, payload, { qos } as IPublishOptions)
+    this.subscribeVentilador();
+  }
+
+  subscribeVentilador() {
+    const qos = 0;
+    const topic = "g4Motor";
+    console.log('Subscribiendo al Topic:', topic)
+    this.curSubscription = this.client?.observe(topic, { qos } as IClientSubscribeOptions).subscribe((message: IMqttMessage) => {
+      
+      console.log('Suscripcion al Topic - Respuesta:', message.payload.toString())
+      this.jsonObject = JSON.parse(message.payload.toString());
+      if(this.jsonObject.motor !== undefined){
+        if(this.jsonObject.motor === "1"){
+          this.mensaje = "Ventilador encendido";
+          this.estiloMensaje['background-color'] = 'rgba(40, 219, 36, 0.8)';
+          this.mostrarMensaje = true;
+        }else{
+          this.mensaje = "Ventilador apagado";
+          this.estiloMensaje['background-color'] = 'rgba(219, 36, 36, 0.8)';
+          this.mostrarMensaje = true;
+        }
+      }else{
+        this.mensaje = "Error al encender el ventilador";
+        this.mostrarMensaje = true;
+      }
+      this.doUnSubscribe();
+    })
+  }
+
+  leerEEPROM() {
+    this.mostrarGrafica = false;
+    this.mostrarUnidades = true;
+    this.mostrarTabla = false;
+    this.mostrarMensaje = false;
+    this.medidas = [];
+    console.log("action", "7")
+    this.publish.payload = "7"
+    const { topic, qos, payload } = this.publish
+    console.log(this.publish)
+    this.client?.unsafePublish(topic, payload, { qos } as IPublishOptions)
+    this.subscribeLeerEEPROM();
+  }
+
+  subscribeLeerEEPROM() { 
+    const qos = 0;
+    const topic = "g4Eeprom";
+    console.log('Subscribiendo al Topic:', topic)
+    this.curSubscription = this.client?.observe(topic, { qos } as IClientSubscribeOptions).subscribe((message: IMqttMessage) => {
+      
+      console.log('Suscripcion al Topic - Respuesta:', message.payload.toString())
+      this.jsonObject = JSON.parse(message.payload.toString());
+      this.medidas.push(
+        {
+          nombre: "Temperatura",
+          valor : (this.jsonObject.temperatura).toString() + " C°"
+        }
+      );
+      this.medidas.push(
+        {
+          nombre: "Humedad",
+          valor : (this.jsonObject.humedad).toString() + " %"
+        }
+      );
+      this.medidas.push(
+        {
+          nombre: "CO2",
+          valor : (this.jsonObject.co2).toString() + " ppm"
+        }
+      );
+      this.medidas.push(
+        {
+          nombre: "Luz",
+          valor : (this.jsonObject.luz).toString() + " Lumens"
+        }
+      );
+      if(this.jsonObject.mov === 1){
+        this.medidas.push(
+          {
+            nombre: "Movimiento",
+            valor : "Si hay movimiento"
+          }
+        );
+      }else{
+        this.medidas.push(
+          {
+            nombre: "Movimiento",
+            valor : "No hay movimiento"
+          }
+        );
+      }
+      this.doUnSubscribe();
+      this.mostrarTabla = true;
+      this.mostrarGrafica = false;
+    })
+  }
+
   // Terminar Conexion con el Broker 
   destroyConnection() {
     try {
       this.client?.disconnect(true)
       this.isConnection = false
+      this.mostrarTabla = false;
       console.log('¡Desconectado exitosamente!')
     } catch (error: any) {
       console.log('Falló la desconexión', error.toString())

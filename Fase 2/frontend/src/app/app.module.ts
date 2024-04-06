@@ -9,6 +9,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import {MatIconModule} from '@angular/material/icon';
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 import { IMqttServiceOptions, MqttModule } from 'ngx-mqtt';
 import { NgCircleProgressModule } from 'ng-circle-progress';
 
@@ -40,6 +49,8 @@ export const connection: IMqttServiceOptions = {
     MatGridListModule,
     MatButtonModule,
     MatSelectModule,
+    MatTableModule,
+    MatIconModule,
     MqttModule.forRoot(connection),
     NgCircleProgressModule.forRoot({})
   ],

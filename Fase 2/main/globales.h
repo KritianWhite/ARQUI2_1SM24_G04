@@ -48,8 +48,8 @@ const int Rc = 10;   // Resistencia calibracion en KΩ
 bool estadoMotor = false;
 
 // Conexión a la red wifi: nombre de la red y contraseña
-#define WIFI_AP "ARRIS-1C3D"
-#define WIFI_PASSWORD "50A5DC411C3D"
+#define WIFI_AP "Xiaomi 11T Pro"
+#define WIFI_PASSWORD "12345678Steven"
 
 // Nombre o IP del servidor mosquitto
 char server[50] = "broker.emqx.io";
