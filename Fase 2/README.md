@@ -9,6 +9,72 @@
 | Steven Josue González Monroy          | 201903974
 | Carlos Raúl Rangel Robelo             | 9112246
 
+
+## Control del Ambiente en Dormitorios Inteligentes Implementando Análisis Meteorológico IoT
+
+### Funcionamiento
+El proyecto se enfoca en el desarrollo de una estación meteorológica IoT para dormitorios inteligentes. Utiliza sensores para recabar datos climáticos en tiempo real y los envía a una plataforma centralizada. Los usuarios pueden visualizar estos datos a través de una aplicación web.
+
+### Usos
+- *Monitoreo Climático:* Permite el seguimiento en tiempo real de condiciones climáticas en la habitación.
+- *Análisis de Datos:* Analiza la información recopilada para predecir patrones climáticos.
+- *Gestión de Dispositivos:* Controla dispositivos IoT en el dormitorio mediante una plataforma central.
+
+### Beneficios
+- *Condiciones Saludables:* Asegura un ambiente óptimo controlando temperatura, humedad y calidad del aire.
+- *Eficiencia Energética:* Mejora el uso de energía basándose en el análisis de datos climáticos.
+- *Experiencia de Usuario Intuitiva:* Ofrece una plataforma fácil de usar para la interacción con el entorno doméstico inteligente.
+
+### Impacto Ambiental
+Promueve la sostenibilidad mediante la reducción del consumo energético y el monitoreo de la calidad del aire, contribuyendo a un menor impacto ambiental.
+
+## DESCRIPCIÓN DE LAS CAPAS SMART CONNECTED DESIGN FRAMEWORK
+
+Para esta fase se utilizaron las 5 capas del Smart Connected Design Framework, las cuales son las siguientes:
+
+### Hardware:
+1. Microcontrolador:
+ * Arduino Mega
+
+ 2. Sensores:
+    
+    * Ultrasonico HC-SR04
+
+    * Humedad y Temperatura DHT11
+
+    * CO2 MQ-135
+
+    * Modulo de fotocelda
+
+3. Actuadores:
+
+* Ventilador
+
+* EEPROM
+
+
+### Software:
+
+1. SO / Plataforma:
+
+2. Arduino
+
+### Communication
+
+1. Modulo WIFI ESP-01
+
+2. Protocolo MQTT
+
+### Cloud Plataform
+
+1. Broker MQTT
+
+### Cloud Application
+
+1. Frontend en Angular
+
+
+
 ## SENSORES
 
 ### SENSOR MQ135
@@ -219,7 +285,41 @@ EMQX Broker es una plataforma de mensajería MQTT de código abierto y altamente
 8. **Integración con otros sistemas**:
    - EMQ X Broker se integra fácilmente con otros sistemas y servicios, como bases de datos, sistemas de mensajería, plataformas de análisis de datos, y más, lo que permite construir soluciones completas de IoT y mensajería.
 
-## BOCETOS
+## BOCETOS DEL PROTOTIPO
+
+El boceto muestra un cubo con los siguientes componentes:
+
+- Sensor de temperatura DHT11 en la cara lateral izquierda.
+
+- Sensor MQ135 en la cara lateral derecha.
+
+- Sensor de movimiento HC-SR04 en la cara superior.
+
+- Modulo foto celda en la cara principal del prototipo.
+
+- Placa Arduino MEGA generico en la base con los siguientes puertos:
+
+    - Puerto de alimentación
+
+    - Puerto USB
+
+    - Puertos digitales y analógicos 
+
+Se incluyen los siguientes detalles adicionales:
+
+- Cables conectando los sensores a los puertos digitales del Arduino.
+
+- Puntos de montaje de los sensores en las caras del cubo. 
+
+- Leyenda identificando cada componente.
+
+- Ventilador DC de 5V
+
+- Puente H L298N para controlar el ventilador
+
+
+
+
 
 El boceto utilizado para la base 2 de dicho proyecto es el siguiente:
 
