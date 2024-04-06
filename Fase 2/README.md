@@ -220,3 +220,15 @@ EMQX Broker es una plataforma de mensajería MQTT de código abierto y altamente
    - EMQ X Broker se integra fácilmente con otros sistemas y servicios, como bases de datos, sistemas de mensajería, plataformas de análisis de datos, y más, lo que permite construir soluciones completas de IoT y mensajería.
 
 ## BOCETOS
+
+El boceto utilizado para la base 2 de dicho proyecto es el siguiente:
+
+![](./src/boceto-prototipo.jpeg)
+
+
+El dashboard sugerido para la visualización de los datos obtenidos es el siguiente:
+
+![](./src/dashboard-image-1.png)
+
+
+![](./src/dashboard-images-2.png)
