@@ -235,3 +235,12 @@ El dashboard sugerido para la visualización de los datos obtenidos es el siguie
 
 
 ![](./src/dashboard-images-3.png)
+
+
+![](./src/dashboard-images-4.png)
+
+
+![](./src/dashboard-images-5.png)
+
+
+![](./src/dashboard-images-6.png)
