@@ -232,3 +232,6 @@ El dashboard sugerido para la visualización de los datos obtenidos es el siguie
 
 
 ![](./src/dashboard-images-2.png)
+
+
+![](./src/dashboard-images-3.png)
