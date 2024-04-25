@@ -1,0 +1,117 @@
+<div class="home-container" style="padding-top: 100px;">
+
+  <mat-card class="configCard" style="background-color: rgb(231, 226, 226);">
+    <div class="emq-title">Conectar a Broker</div>
+    <mat-grid-list cols="2" rowHeight="7:1">
+      <mat-grid-tile>
+        <button mat-raised-button color="primary" (click)="createConnection()">{{ isConnection ? 'Conectado' :
+          'Conectar' }}</button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button mat-raised-button color="warn" (click)="destroyConnection()" *ngIf="isConnection">Desconectar</button>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-card>
+
+  <mat-card class="subscriptionCard" style="background-color: rgb(231, 226, 226);" *ngIf="isConnection">
+    <div class="emq-title">Sensores</div>
+
+    <mat-grid-list cols="5" rowHeight="3:1">
+      <mat-grid-tile>
+        <button className="boton" mat-raised-button color="primary" (click)="doPublish('1', 'g4Temperatura')">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="device_thermostat"></mat-icon>
+          {{ subscribeSuccess ? 'Visualizando' : 'Temperatura' }}</button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button className="boton" mat-raised-button color="primary" (click)="doPublish('2', 'g4Humedad')">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="water_drop"></mat-icon>
+          {{subscribeSuccess ? 'Visualizando' : 'Humedad' }}</button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button className="boton" mat-raised-button color="primary" (click)="doPublish('3', 'g4CO2')">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="co2"></mat-icon>
+          {{subscribeSuccess ? 'Visualizando' : 'CO2' }}</button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button className="boton" mat-raised-button color="primary" (click)="doPublish('4', 'g4Luz')">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="wb_incandescent"></mat-icon>
+          {{subscribeSuccess ? 'Visualizando' : 'Iluminación' }}</button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button className="boton" mat-raised-button color="primary" (click)="doPublish('5', 'g4Movimiento')">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="track_changes"></mat-icon>
+          {{subscribeSuccess ? 'Visualizando' : 'Movimiento' }}</button>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <div class="emq-title">EEPROM</div>
+    <mat-grid-list cols="3" rowHeight="8:1">
+      <mat-grid-tile>
+        <button className="boton" mat-raised-button color="warn" (click)="guardarEEPROM()">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="save"></mat-icon>
+          {{subscribeSuccess ? 'Visualizando' : 'Guardar Datos' }} </button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button className="boton" mat-raised-button color="warn" (click)="leerEEPROM()">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="visibility"></mat-icon>
+          {{subscribeSuccess ? 'Visualizando' : 'Ver Datos' }}</button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button className="boton" mat-raised-button color="accent" (click)="ventilador()">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="air"></mat-icon>
+          {{subscribeSuccess ? 'Visualizando' : 'Ventilador' }}</button>
+      </mat-grid-tile>
+      <br>
+
+    </mat-grid-list>
+  </mat-card>
+
+  <mat-card class="publishCard" style="background-color: rgb(231, 226, 226); text-align: center;"
+    *ngIf="isConnection && mostrarGrafica">
+    <div class="emq-title" style="display: inline-block; max-width: 25%;">
+
+      <div class="emq-title">{{tituloGrafica}}</div>
+      <circle-progress [percent]=porcentaje [radius]="100" [outerStrokeWidth]="16" [innerStrokeWidth]="8"
+        [outerStrokeColor]="'#78C000'" [innerStrokeColor]="'#C7E596'" [animation]="true" [animationDuration]="300"
+        [title]="'' + sensorValor" [titleColor]="'#000000'" [unitsFontSize]="'16'" [showUnits]="true"
+        [units]=unidadMedida [showSubtitle]="false" [showBackground]="true" [backgroundGradientStopColor]="'#e0e0e0'"
+        [backgroundOpacity]="1" [backgroundStroke]="'#d0d0d0'" [backgroundStrokeWidth]="16"
+        [outerStrokeLinecap]="'butt'" [showInnerStroke]="true" [startFromZero]="false" [showTitle]=mostrarUnidades
+        [titleFontSize]="'24'" [titleFontWeight]="'bold'" [titleColor]="'#000000'" [max]="150"></circle-progress>
+
+    </div>
+  </mat-card>
+
+  <mat-card class="publishCard" style="background-color: rgb(231, 226, 226);" *ngIf="isConnection && mostrarTabla">
+    <div class="emq-title">Datos almacenados en memoria EEPROM:</div>
+    <table mat-table [dataSource]="medidas" class="mat-elevation-z8">
+
+      <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Metrica Column -->
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef> Metrica </th>
+        <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+      </ng-container>
+
+      <!-- Valor Column -->
+      <ng-container matColumnDef="valor">
+        <th mat-header-cell *matHeaderCellDef> Valor </th>
+        <td mat-cell *matCellDef="let element"> {{element.valor}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+  </mat-card>
+
+  <mat-card class="publishCard" [ngStyle]="estiloMensaje" *ngIf="mostrarMensaje" >
+    <mat-card-content>
+      <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="error_outline"></mat-icon>
+      <div class="emq-title" style="color: white;">{{mensaje}}</div>
+    </mat-card-content>
+  </mat-card>
+
+
+</div>
