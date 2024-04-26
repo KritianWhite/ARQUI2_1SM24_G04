@@ -14,8 +14,8 @@ void guardarDatos() {
   EEPROM.put(EEPROM_START_PROXIMIDAD, movimiento);
 
     //enviamos mensaje de confirmación a broker
-    String payload = "{\"mensaje\": \"Datos guardados en EEPROM\"}";
-    client.publish("g4Eeprom", payload.c_str());
+    String payload = "6,Datos guardados en EEPROM";
+    enviar(payload);
 }
 
 void leerDatos() {
@@ -32,9 +32,7 @@ void leerDatos() {
   EEPROM.get(EEPROM_START_PROXIMIDAD, movimiento);
 
   // Prepare a JSON payload String
-  String payload = "{\"temperatura\": " + String(temperatura) + ", \"humedad\": " + String(humedad) + ", \"luz\": " + String(lumens) + ", \"co2\": " + String(ppm) + ", \"mov\": " + String(movimiento) + "}";
+  String payload = "7," + String(temperatura) + "," + String(humedad) + "," + String(lumens) + "," + String(ppm) + "," + String(movimiento);
   // Send payload
-  char attributes[100];
-  payload.toCharArray(attributes, 100);
-  client.publish("g4Eeprom", attributes);
+  enviar(payload);
 }

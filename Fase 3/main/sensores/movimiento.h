@@ -10,7 +10,7 @@ bool getMovimiento() {
   d = t / 59;               //escalamos el tiempo a una distancia en cm
 
 
-  if(d<100){
+  if(d<17){
     return true;
   }
   return false;

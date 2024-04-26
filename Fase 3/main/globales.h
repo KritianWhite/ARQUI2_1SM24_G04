@@ -14,6 +14,8 @@
 #define EEPROM_START_CO2 30
 #define EEPROM_START_PROXIMIDAD 40
 
+String codigo = "";
+
 enum Estado
 {
   NINGUNO,
@@ -53,15 +55,3 @@ bool estadoMotor = false;
 
 // Nombre o IP del servidor mosquitto
 char server[50] = "broker.emqx.io";
-
-// Inicializamos el objeto de cliente esp
-WiFiEspClient espClient;
-
-// Iniciamos el objeto subscriptor del cliente
-// con el objeto del cliente
-PubSubClient client(espClient);
-
-// Contador para el envio de datos
-unsigned long lastSend;
-
-int status = WL_IDLE_STATUS;
