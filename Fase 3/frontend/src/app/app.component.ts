@@ -354,6 +354,16 @@ export class AppComponent {
     }
   }
 
+  accionLuz(){
+    console.log("Se encendió el foco");
+    
+  }
+
+  accionPuerta(){
+    console.log("Se abrió la puerta");
+  }
+
+
   // Alertas SweetAlert
   minimalSweetAlert(mensaje: string, icon_type: SweetAlertIcon) {
     const Toast = Swal.mixin({
