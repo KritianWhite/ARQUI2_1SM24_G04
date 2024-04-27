@@ -187,7 +187,7 @@ Para que este código funcione correctamente, debes asegurarte de que:
    - `cur = conn.cursor()`: permite insertar data en la base de datos.
 
 3. **Funciones de callback**:
-   - `on_connect(client, userdata, flags, rc)`: Esta función se llama cuando el cliente MQTT se conecta al servidor. En este caso, simplemente imprime un mensaje de conexión exitosa y suscribe al cliente al topic "g4inTopic".
+   - `on_connect(client, userdata, flags, rc)`: Esta función se llama cuando el cliente MQTT se conecta al servidor. En este caso, simplemente imprime un mensaje de conexión exitosa y suscribe al cliente al topic designado para casa sensor.
    - `on_message(client, userdata, msg)`: Esta función se ejecuta cuando el cliente recibe un mensaje del servidor MQTT en el topic al que está suscrito. Imprime el mensaje recibido y lo envía a través de la conexión serial.
 
 4. **Creación del cliente MQTT**:
