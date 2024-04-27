@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgCircleProgressModule } from 'ng-circle-progress';
+import Swal, {SweetAlertIcon} from 'sweetalert2';
 
 import {
   IMqttMessage,
@@ -69,7 +69,6 @@ export class AppComponent {
   escala = {min: 0, max: 0};
   mostrarGrafica = false;
   mostrarTabla = false;
-  mostrarMensaje = false;
   medidas : Metrica[] = [];
   medidas2 : Metrica[] = [
     {nombre: 'Temperatura', valor: '0'},
@@ -82,31 +81,26 @@ export class AppComponent {
   displayedColumns: string[] = ['nombre', 'valor'];
   jsonObject: any;
   mensaje: string = '';
-  estiloMensaje = {
-    'background-color': 'rgba(93, 225, 255, 0.8)',
-    'color': 'white',
-    'font-size': 'large',
-    'text-align': 'center',
-  }
 
   // Crear Conexion con el Broker 
   createConnection() {
-    
     try {
       this.client?.connect(this.connection as IMqttServiceOptions)
     } catch (error) {
       console.log('mqtt.connect error', error);
+      this.minimalSweetAlert('¡Falló la conexión con el borker!', "error");
     }
 
     this.client?.onConnect.subscribe(() => {
       this.isConnection = true
       console.log('¡La conexión se realizó correctamente!');
-      
+      this.minimalSweetAlert('¡Conexión exitosa!', "success");
     });
 
     this.client?.onError.subscribe((error: any) => {
       this.isConnection = false
       console.log('La conexión falló', error);
+      this.minimalSweetAlert('¡Falló la conexión!', "error");
     });
 
     this.client?.onMessage.subscribe((packet: any) => {
@@ -207,7 +201,6 @@ export class AppComponent {
     this.mostrarGrafica = false;
     this.mostrarUnidades = true;
     this.mostrarTabla = false;
-    this.mostrarMensaje = false;
     console.log("action", action)
     this.publish.payload = action
 
@@ -222,7 +215,6 @@ export class AppComponent {
     this.mostrarGrafica = false;
     this.mostrarUnidades = true;
     this.mostrarTabla = false;
-    this.mostrarMensaje = false;
     console.log("action", "6")
     this.publish.payload = "6"
     const { topic, qos, payload } = this.publish
@@ -241,12 +233,9 @@ export class AppComponent {
       this.jsonObject = JSON.parse(message.payload.toString());
       if(this.jsonObject.mensaje !== undefined){
         this.mensaje = this.jsonObject.mensaje;
-        this.estiloMensaje['background-color'] = 'rgba(40, 219, 36, 0.8)';
-        this.mostrarMensaje = true;
+        this.minimalSweetAlert("¡Datos guardados exitosamente!", "success");
       }else{
-        this.mensaje = "Error al guardar en la EEPROM";
-        this.estiloMensaje['background-color'] = 'rgba(219, 36, 36, 0.8)';
-        this.mostrarMensaje = true;
+        this.minimalSweetAlert('Error al guardar los datos', "error");
       }
       this.doUnSubscribe();
     })
@@ -256,7 +245,6 @@ export class AppComponent {
     this.mostrarGrafica = false;
     this.mostrarUnidades = true;
     this.mostrarTabla = false;
-    this.mostrarMensaje = false;
     console.log("action", "8")
     this.publish.payload = "8"
     const { topic, qos, payload } = this.publish
@@ -274,18 +262,13 @@ export class AppComponent {
       console.log('Suscripcion al Topic - Respuesta:', message.payload.toString())
       this.jsonObject = JSON.parse(message.payload.toString());
       if(this.jsonObject.motor !== undefined){
-        if(this.jsonObject.motor === "1"){
-          this.mensaje = "Ventilador encendido";
-          this.estiloMensaje['background-color'] = 'rgba(40, 219, 36, 0.8)';
-          this.mostrarMensaje = true;
+        if(this.jsonObject.motor == "1"){
+          this.minimalSweetAlert('Ventilador encendido', "info");
         }else{
-          this.mensaje = "Ventilador apagado";
-          this.estiloMensaje['background-color'] = 'rgba(219, 36, 36, 0.8)';
-          this.mostrarMensaje = true;
+          this.minimalSweetAlert('Ventilador apagado', "info");
         }
       }else{
-        this.mensaje = "Error al encender el ventilador";
-        this.mostrarMensaje = true;
+        this.minimalSweetAlert('Error al encender/apagar el ventilador', "error");
       }
       this.doUnSubscribe();
     })
@@ -295,7 +278,6 @@ export class AppComponent {
     this.mostrarGrafica = false;
     this.mostrarUnidades = true;
     this.mostrarTabla = false;
-    this.mostrarMensaje = false;
     this.medidas = [];
     console.log("action", "7")
     this.publish.payload = "7"
@@ -365,8 +347,29 @@ export class AppComponent {
       this.isConnection = false
       this.mostrarTabla = false;
       console.log('¡Desconectado exitosamente!')
+      this.minimalSweetAlert('¡Desconexión exitosa!', "success");
     } catch (error: any) {
       console.log('Falló la desconexión', error.toString())
+      this.minimalSweetAlert('¡Falló la desconexión!', "error");
     }
+  }
+
+  // Alertas SweetAlert
+  minimalSweetAlert(mensaje: string, icon_type: SweetAlertIcon) {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: icon_type,
+      title: mensaje
+    });
   }
 }

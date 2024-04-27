@@ -25,6 +25,7 @@
     "ng-circle-progress": "^1.7.1",
     "ngx-mqtt": "^9.0.5",
     "rxjs": "~7.5.0",
+    "sweetalert2": "^11.10.8",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
