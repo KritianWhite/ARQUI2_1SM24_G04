@@ -174,14 +174,17 @@ Para que este código funcione correctamente, debes asegurarte de que:
 
 ## SUSCRIPTOR
 
-### SUSCRIPTOR DESDE ARDUINO
+### SUSCRIPTOR
 
 1. **Importaciones de módulos**:
-   - `import serial`: Importa el módulo `serial`, que se utiliza para comunicación serial con dispositivos.
-   - `import paho.mqtt.client as mqtt`: Importa el cliente MQTT del módulo `paho.mqtt.client`.
 
-2. **Creación de la conexión serial**:
-   - `ser = serial.Serial('COM3', 115200)`: Establece una conexión serial en el puerto COM3 con una velocidad de baudios de 115200. Esto supone que estás conectando un dispositivo serial al puerto COM3 de tu computadora.
+   - `import paho.mqtt.client as mqtt`: Importa el cliente MQTT del módulo `paho.mqtt.client`.
+   - `import pymysql`: Importa la libreria para poder conectarse e insertar datos en la base de datos.
+   - `import json`: Importa la libreria que permite la manipulación de objetos JSON.
+
+2. **Creación de la conexión a la base de datos**:
+   - `conn = pymysql.connect(host=db_host, user=db_user, password=db_password, db=db_name)`: Crea un objeto para la conección de la    base de datos utilizando las credenciales de la misma.
+   - `cur = conn.cursor()`: permite insertar data en la base de datos.
 
 3. **Funciones de callback**:
    - `on_connect(client, userdata, flags, rc)`: Esta función se llama cuando el cliente MQTT se conecta al servidor. En este caso, simplemente imprime un mensaje de conexión exitosa y suscribe al cliente al topic "g4inTopic".
@@ -334,6 +337,10 @@ El boceto utilizado para la maqueta de la fase 3 es el siguiente:
 
 - Area verde : conforma el lugar en el que se alojan los sensores de humeda, co2, ultrasonico y la fotoresistencia.
 
+Modelo básico de la maqueta antes de colocar los sensores:
+
+![](./src/maquetaFinalReal.jpeg)
+
 El boceto utilizado para la fase 3 de dicho proyecto es el siguiente:
 
 ![](./src/boceto-prototipo.jpeg)
@@ -357,3 +364,7 @@ El dashboard sugerido para la visualización de los datos obtenidos es el siguie
 
 
 ![](./src/dashboard-images-6.png)
+
+El dashboard utilizado en grafana es el siguiente:
+
+![](./src/dashboardGrafana.jpeg)
