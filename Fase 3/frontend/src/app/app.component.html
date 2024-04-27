@@ -1,68 +1,86 @@
 <div class="home-container" style="padding-top: 100px;">
 
   <mat-card class="configCard" style="background-color: rgb(231, 226, 226);">
-    <div class="emq-title">Conectar a Broker</div>
+    <div class="emq-title">CONEXIÓN</div>
     <mat-grid-list cols="2" rowHeight="7:1">
       <mat-grid-tile>
-        <button mat-raised-button color="primary" (click)="createConnection()">{{ isConnection ? 'Conectado' :
+        <button mat-flat-button color="primary" (click)="createConnection()">{{ isConnection ? 'Conectado' :
           'Conectar' }}</button>
       </mat-grid-tile>
       <mat-grid-tile>
-        <button mat-raised-button color="warn" (click)="destroyConnection()" *ngIf="isConnection">Desconectar</button>
+        <button mat-flat-button color="warn" (click)="destroyConnection()" *ngIf="isConnection">Desconectar</button>
       </mat-grid-tile>
     </mat-grid-list>
   </mat-card>
 
   <mat-card class="subscriptionCard" style="background-color: rgb(231, 226, 226);" *ngIf="isConnection">
-    <div class="emq-title">Sensores</div>
+    <div class="emq-title">SENSORES</div>
 
     <mat-grid-list cols="5" rowHeight="3:1">
       <mat-grid-tile>
-        <button className="boton" mat-raised-button color="primary" (click)="doPublish('1', 'g4Temperatura')">
+        <button className="boton" mat-stroked-button color="white" (click)="doPublish('1', 'g4Temperatura')">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="device_thermostat"></mat-icon>
           {{ subscribeSuccess ? 'Visualizando' : 'Temperatura' }}</button>
       </mat-grid-tile>
       <mat-grid-tile>
-        <button className="boton" mat-raised-button color="primary" (click)="doPublish('2', 'g4Humedad')">
+        <button className="boton" mat-stroked-button color="white" (click)="doPublish('2', 'g4Humedad')">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="water_drop"></mat-icon>
           {{subscribeSuccess ? 'Visualizando' : 'Humedad' }}</button>
       </mat-grid-tile>
       <mat-grid-tile>
-        <button className="boton" mat-raised-button color="primary" (click)="doPublish('3', 'g4CO2')">
+        <button className="boton" mat-stroked-button color="white" (click)="doPublish('3', 'g4CO2')">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="co2"></mat-icon>
           {{subscribeSuccess ? 'Visualizando' : 'CO2' }}</button>
       </mat-grid-tile>
       <mat-grid-tile>
-        <button className="boton" mat-raised-button color="primary" (click)="doPublish('4', 'g4Luz')">
+        <button className="boton" mat-stroked-button color="white" (click)="doPublish('4', 'g4Luz')">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="wb_incandescent"></mat-icon>
           {{subscribeSuccess ? 'Visualizando' : 'Iluminación' }}</button>
       </mat-grid-tile>
       <mat-grid-tile>
-        <button className="boton" mat-raised-button color="primary" (click)="doPublish('5', 'g4Movimiento')">
+        <button className="boton" mat-stroked-button color="white" (click)="doPublish('5', 'g4Movimiento')">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="track_changes"></mat-icon>
           {{subscribeSuccess ? 'Visualizando' : 'Movimiento' }}</button>
       </mat-grid-tile>
     </mat-grid-list>
     <div class="emq-title">EEPROM</div>
-    <mat-grid-list cols="3" rowHeight="8:1">
+    <mat-grid-list cols="2" rowHeight="8:1">
       <mat-grid-tile>
-        <button className="boton" mat-raised-button color="warn" (click)="guardarEEPROM()">
+        <button className="boton" mat-stroked-button color="white" (click)="guardarEEPROM()">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="save"></mat-icon>
           {{subscribeSuccess ? 'Visualizando' : 'Guardar Datos' }} </button>
       </mat-grid-tile>
       <mat-grid-tile>
-        <button className="boton" mat-raised-button color="warn" (click)="leerEEPROM()">
+        <button className="boton" mat-stroked-button color="white" (click)="leerEEPROM()">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="visibility"></mat-icon>
           {{subscribeSuccess ? 'Visualizando' : 'Ver Datos' }}</button>
       </mat-grid-tile>
+    </mat-grid-list>
+
+
+    <div class="emq-title">ACCIONES</div>
+    <mat-grid-list cols="3" rowHeight="8:1">
       <mat-grid-tile>
-        <button className="boton" mat-raised-button color="accent" (click)="ventilador()">
+        <button className="boton" mat-stroked-button color="white" (click)="accionLuz()">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="wb_incandescent"></mat-icon>
+          {{subscribeSuccess ? 'Apagar luz' : 'Encender luz' }} </button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button className="boton" mat-stroked-button color="white" (click)="accionPuerta()">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="sensor_door"></mat-icon>
+          {{subscribeSuccess ? 'Cerrar puerta' : 'Abrir puerta' }}</button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button className="boton" mat-stroked-button color="white" (click)="ventilador()">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="air"></mat-icon>
           {{subscribeSuccess ? 'Visualizando' : 'Ventilador' }}</button>
       </mat-grid-tile>
       <br>
 
     </mat-grid-list>
+
+
+
   </mat-card>
 
   <mat-card class="publishCard" style="background-color: rgb(231, 226, 226); text-align: center;"
@@ -105,13 +123,5 @@
     </table>
 
   </mat-card>
-
-  <mat-card class="publishCard" [ngStyle]="estiloMensaje" *ngIf="mostrarMensaje" >
-    <mat-card-content>
-      <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="error_outline"></mat-icon>
-      <div class="emq-title" style="color: white;">{{mensaje}}</div>
-    </mat-card-content>
-  </mat-card>
-
 
 </div>
