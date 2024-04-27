@@ -1,4 +1,4 @@
-# MANUAL TÉCNICO FASE 2 - PROYECTO
+# MANUAL TÉCNICO FASE 3 - PROYECTO
 
 ### INTEGRANTES GRUPO NO. 04
 
@@ -59,6 +59,8 @@ Para esta fase se utilizaron las 5 capas del Smart Connected Design Framework, l
 
 2. Arduino
 
+3. Linux AWS
+
 ### Communication
 
 1. Modulo WIFI ESP-01
@@ -68,6 +70,8 @@ Para esta fase se utilizaron las 5 capas del Smart Connected Design Framework, l
 ### Cloud Plataform
 
 1. Broker MQTT
+2. Base de datos en mysql, RDS amazon
+3. Grafana en instancia ec2 amazon
 
 ### Cloud Application
 
@@ -281,9 +285,10 @@ EMQX Broker es una plataforma de mensajería MQTT de código abierto y altamente
 
 7. **Monitoreo y gestión**:
    - La plataforma proporciona herramientas de monitoreo y gestión que permiten supervisar el rendimiento del broker, la carga de trabajo, las conexiones activas, entre otros parámetros importantes para garantizar un funcionamiento óptimo del sistema.
+   - Tambien se implemento la herramienta Grafana para monitoreo en tiempo real de los datos generados y almacenados en la base de datos que conforman el historial que podra ser visualizado en un dashboard de fácil compresión.
 
 8. **Integración con otros sistemas**:
-   - EMQ X Broker se integra fácilmente con otros sistemas y servicios, como bases de datos, sistemas de mensajería, plataformas de análisis de datos, y más, lo que permite construir soluciones completas de IoT y mensajería.
+   - EMQ X Broker se integra fácilmente con otros sistemas y servicios, como bases la datos RDS creada para este proyecto, sistemas de mensajería, plataformas de análisis de datos, y más, lo que permite construir soluciones completas de IoT y mensajería.
 
 ## BOCETOS DEL PROTOTIPO
 
@@ -317,11 +322,19 @@ Se incluyen los siguientes detalles adicionales:
 
 - Puente H L298N para controlar el ventilador
 
+El boceto utilizado para la maqueta de la fase 3 es el siguiente: 
 
+![](./src/maquetaFinal.jpeg)
 
+- Area roja: sitio donde se aloja el ventilador (motor dc).
 
+- Area azul: espacio ocupado para la seguridad de la habitación (motor tipo servo)
 
-El boceto utilizado para la base 2 de dicho proyecto es el siguiente:
+- Area amarilla: area designada para la iluminación de la habitación con 110 voltios.
+
+- Area verde : conforma el lugar en el que se alojan los sensores de humeda, co2, ultrasonico y la fotoresistencia.
+
+El boceto utilizado para la fase 3 de dicho proyecto es el siguiente:
 
 ![](./src/boceto-prototipo.jpeg)
 
