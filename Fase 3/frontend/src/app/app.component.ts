@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import Swal, {SweetAlertIcon} from 'sweetalert2';
 
 import {
@@ -20,7 +20,15 @@ export interface Metrica {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy{
+
+  ngOnDestroy(): void {
+    this.destroyConnection();
+  }
+
+  ngOnInit(): void {
+    this.createConnection();
+  }
 
   constructor(private _mqttService: MqttService) {
     this.client = this._mqttService;
@@ -97,7 +105,7 @@ export class AppComponent {
     this.client?.onConnect.subscribe(() => {
       this.isConnection = true
       console.log('¡La conexión se realizó correctamente!');
-      this.minimalSweetAlert('¡Conexión exitosa!', "success");
+      // this.minimalSweetAlert('¡Conexión exitosa!', "success");
     });
 
     this.client?.onError.subscribe((error: any) => {

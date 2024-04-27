@@ -1,8 +1,8 @@
 <div class="home-container" style="padding-top: 100px;">
 
-  <mat-card class="configCard" style="background-color: rgb(231, 226, 226);">
+  <!-- <mat-card class="configCard" style="background-color: rgb(231, 226, 226);">
     <div class="emq-title">CONEXIÓN</div>
-    <mat-grid-list cols="2" rowHeight="7:1">
+    <mat-grid-list cols="1" rowHeight="7:1">
       <mat-grid-tile>
         <button mat-flat-button color="primary" (click)="createConnection()">{{ isConnection ? 'Conectado' :
           'Conectar' }}</button>
@@ -11,7 +11,8 @@
         <button mat-flat-button color="warn" (click)="destroyConnection()" *ngIf="isConnection">Desconectar</button>
       </mat-grid-tile>
     </mat-grid-list>
-  </mat-card>
+  </mat-card> -->
+  <!-- <button mat-flat-button color="warn" (click)="destroyConnection()" *ngIf="isConnection" style="position: absolute; top: 10px; right: 10px;">Desconectar</button> -->
 
   <mat-card class="subscriptionCard" style="background-color: rgb(231, 226, 226);" *ngIf="isConnection">
     <div class="emq-title">SENSORES</div>
