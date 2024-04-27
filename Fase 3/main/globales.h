@@ -14,6 +14,11 @@
 #define EEPROM_START_CO2 30
 #define EEPROM_START_PROXIMIDAD 40
 
+#define MQ135_RL 20.0 // Resistencia de carga (kΩ)
+#define MQ135_RO 76.63 // Resistencia del sensor en aire limpio (kΩ)
+#define MQ135_PARA 116.6020682 // Parámetro para calcular gases diversos
+#define MQ135_PARB 2.769034857 // Parámetro para calcular gases diversos
+
 String codigo = "";
 
 enum Estado
@@ -26,6 +31,7 @@ enum Estado
 Estado ESTADO;
 
 DHT dht(DHT_PIN, DHT_TYPE);
+Servo servoPuerta;
 
 // Definimos la sensibilidad de la fotocelda
 const float sensibilidadFotocelda = 100.0; // V/lux
@@ -44,10 +50,16 @@ const long A = 1000; // Resistencia en oscuridad en KΩ
 const int B = 15;    // Resistencia a la luz (10 Lux) en KΩ
 const int Rc = 10;   // Resistencia calibracion en KΩ
 
-// definimos los pines del motor
+// definimos los pines del ventilador
 #define motor1 9
 #define motor2 8
+#define pinVelocidad 10 // pin para controlar la velocidad del ventilador
+#define velocidad1 115 // velocidad lenta
+#define velocidad2 255 // velocidad rápida
+
+
 bool estadoMotor = false;
+bool estadoPuerta = false;
 
 // Conexión a la red wifi: nombre de la red y contraseña
 #define WIFI_AP "Xiaomi 11T Pro"

@@ -1,18 +1,9 @@
 float getPartPerMillon(){
-  int val = analogRead(analogMq135);
+  int sensorValue = analogRead(analogMq135);
+  float Rs = MQ135_RL * (1023.0 / sensorValue - 1.0); // Calcular la resistencia del sensor
 
-
-  float A = 116.6020682;
-  float B = -2.769034857;
-
-  // Resistencia en aire limpio
-  float R0 = 76.63;
-
-  // Calcula la resistencia del sensor
-  float Rs = (1023.0 / val) - 1.0;
-
-  // Calcula la concentración de CO2 en PPM
-  float ppm = A * pow(Rs / R0, B);
+  // Calcular las partes por millón de gases diversos
+  float ppm = MQ135_PARA * pow(Rs / MQ135_RO, -MQ135_PARB);
 
   return ppm;
 }

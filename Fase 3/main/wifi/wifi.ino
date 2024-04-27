@@ -105,6 +105,18 @@ void loop()
         String payload = "{\"motor\":" + mensaje + "}";
         payload.toCharArray(bufferPublish, 100);
         mqttClient.publish("g4Motor", bufferPublish);
+      }else if(numeroTopic == "9"){ // Cambiar estado de la puerta
+        String payload = "{\"puerta\":" + mensaje + "}";
+        payload.toCharArray(bufferPublish, 100);
+        mqttClient.publish("g4Servo", bufferPublish);
+      }else if(numeroTopic == "10"){ // Cambiar velocidad del motor a lenta
+        String payload = "{\"velocidad\":" + mensaje + "}";
+        payload.toCharArray(bufferPublish, 100);
+        mqttClient.publish("g4Velocidad", bufferPublish);
+      }else if(numeroTopic == "11"){ // Cambiar velocidad del motor a rápida
+        String payload = "{\"velocidad\":" + mensaje + "}";
+        payload.toCharArray(bufferPublish, 100);
+        mqttClient.publish("g4Velocidad", bufferPublish);
       }
       mensajeArduino = ""; // Reinicia la cadena para la próxima recepción
     }

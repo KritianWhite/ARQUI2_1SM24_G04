@@ -1,5 +1,6 @@
 #include <EEPROM.h>
 #include <DHT.h>
+#include <Servo.h>
 #include "globales.h"
 #include "serial.h"
 #include "./sensores/co2.h"
@@ -8,6 +9,7 @@
 #include "./sensores/luz.h"
 #include "eeprom.h"
 #include "motor.h"
+#include "puerta.h"
 
 
 void setup() {
@@ -18,8 +20,17 @@ void setup() {
   pinMode(Echo, INPUT);        // pin como entrada
   pinMode(motor1, OUTPUT);     // pin como salida
   pinMode(motor2, OUTPUT);     // pin como salida
+  pinMode(pinVelocidad, OUTPUT); // pin como salida
   digitalWrite(Trigger, LOW);  // Inicializamos el pin con 0
+  pinMode(analogMq135, INPUT); // pin como entrada
   dht.begin();
+  servoPuerta.attach(4);
+  servoPuerta.write(3);
+  estadoPuerta = 0;
+  estadoMotor = 0;
+  digitalWrite(motor1, LOW);
+  digitalWrite(motor2, LOW);
+  analogWrite(pinVelocidad, velocidad1);
 }
 
 void loop() {
@@ -45,6 +56,12 @@ void loop() {
         leerDatos();
       } else if (codigo == "8") {
         cambiarEstadoMotor();
+      } else if (codigo == "9") {
+        cambiarEstadoPuerta();
+      } else if (codigo == "10") {
+        setVelocidadLenta();
+      } else if (codigo == "11") {
+        setVelocidadRapida();
       }
       codigo = "";  // Reinicia la cadena para la próxima recepción
     }
