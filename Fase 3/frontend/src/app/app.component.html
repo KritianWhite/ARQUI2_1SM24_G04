@@ -59,28 +59,40 @@
 
 
     <div class="emq-title">ACCIONES</div>
-    <mat-grid-list cols="3" rowHeight="8:1">
+    <mat-grid-list cols="2" rowHeight="8:1">
       <mat-grid-tile>
         <button className="boton" mat-stroked-button color="white" (click)="accionLuz()">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="wb_incandescent"></mat-icon>
-          {{subscribeSuccess ? 'Apagar luz' : 'Encender luz' }} </button>
+          {{encenderLuz ? 'Apagar luz' : 'Encender luz' }} </button>
       </mat-grid-tile>
       <mat-grid-tile>
         <button className="boton" mat-stroked-button color="white" (click)="accionPuerta()">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="sensor_door"></mat-icon>
-          {{subscribeSuccess ? 'Cerrar puerta' : 'Abrir puerta' }}</button>
+          {{puertaAbierta ? 'Cerrar puerta' : 'Abrir puerta' }}</button>
       </mat-grid-tile>
+      <br>
+    </mat-grid-list>
+
+    <div class="emq-title">VENTILADOR</div>
+    <mat-grid-list cols="3" rowHeight="8:1">
       <mat-grid-tile>
         <button className="boton" mat-stroked-button color="white" (click)="ventilador()">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="air"></mat-icon>
-          {{subscribeSuccess ? 'Visualizando' : 'Ventilador' }}</button>
+          {{encenderVentilador ? 'Apagar' : 'Encender' }}</button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button className="boton" mat-stroked-button color="white" (click)="velocidadUno()">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="arrow_downward"></mat-icon>
+          {{subscribeSuccess ? 'Apagar luz' : 'Velocidad 1' }} </button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button className="boton" mat-stroked-button color="white" (click)="velocidadDos()">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="arrow_upward"></mat-icon>
+          {{subscribeSuccess ? 'Cerrar puerta' : 'Velocidad 2' }}</button>
       </mat-grid-tile>
       <br>
 
     </mat-grid-list>
-
-
-
   </mat-card>
 
   <mat-card class="publishCard" style="background-color: rgb(231, 226, 226); text-align: center;"

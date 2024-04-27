@@ -61,6 +61,9 @@ export class AppComponent {
   client: MqttService | undefined;
   isConnection = false;
   subscribeSuccess = false;
+  puertaAbierta = false;
+  encenderLuz = false;
+  encenderVentilador = false;
 
   sensorValor = 0;
   porcentaje = 0;
@@ -146,7 +149,7 @@ export class AppComponent {
         this.tituloGrafica = 'Dióxido de Carbono (CO2)';
         this.unidadMedida = ' ppm';
         this.escala.min = 0;
-        this.escala.max = 5000;
+        this.escala.max = 600;
         this.porcentaje = (parseFloat(this.sensorValor.toString()) * 100)/parseFloat(this.escala.max.toString());
         this.mostrarGrafica = true;
 
@@ -233,7 +236,7 @@ export class AppComponent {
       this.jsonObject = JSON.parse(message.payload.toString());
       if(this.jsonObject.mensaje !== undefined){
         this.mensaje = this.jsonObject.mensaje;
-        this.minimalSweetAlert("¡Datos guardados exitosamente!", "success");
+        this.minimalSweetAlert("¡Datos guardados exitosamente!", "info");
       }else{
         this.minimalSweetAlert('Error al guardar los datos', "error");
       }
@@ -263,8 +266,10 @@ export class AppComponent {
       this.jsonObject = JSON.parse(message.payload.toString());
       if(this.jsonObject.motor !== undefined){
         if(this.jsonObject.motor == "1"){
+          this.encenderVentilador = true;
           this.minimalSweetAlert('Ventilador encendido', "info");
         }else{
+          this.encenderVentilador = false;
           this.minimalSweetAlert('Ventilador apagado', "info");
         }
       }else{
@@ -334,6 +339,7 @@ export class AppComponent {
           }
         );
       }
+      this.minimalSweetAlert("¡Datos leídos exitosamente!", "info");
       this.doUnSubscribe();
       this.mostrarTabla = true;
       this.mostrarGrafica = false;
@@ -355,16 +361,156 @@ export class AppComponent {
   }
 
   accionLuz(){
-    console.log("Se encendió el foco");
-    
+    this.mostrarGrafica = false;
+    this.mostrarUnidades = true;
+    this.mostrarTabla = false;
+    console.log("action", "8")
+    this.publish.payload = "12"
+    const { topic, qos, payload } = this.publish
+    console.log(this.publish)
+    this.client?.unsafePublish(topic, payload, { qos } as IPublishOptions)
+    this.subscribeLuz();
+  }
+
+  subscribeLuz(){
+    const qos = 0;
+    const topic = "g4Bombilla";
+    console.log('Subscribiendo al Topic:', topic)
+    this.curSubscription = this.client?.observe(topic, { qos } as IClientSubscribeOptions).subscribe((message: IMqttMessage) => {
+      
+      console.log('Suscripcion al Topic - Respuesta:', message.payload.toString())
+      this.jsonObject = JSON.parse(message.payload.toString());
+      if(this.jsonObject.bombilla !== undefined){
+        if(this.jsonObject.bombilla == "1"){
+          this.encenderLuz = true;
+          this.minimalSweetAlert('Encendiendo luz.', "info");
+        }else if (this.jsonObject.bombilla == "2"){
+          this.alertSweet("No se encuentra nadie en la habitación.", "warning");
+        }else{
+          this.encenderLuz = false;
+          this.minimalSweetAlert('Apagando luz.', "info");
+        }
+      }else{
+        this.minimalSweetAlert('Error al encender/apagar la luz.', "error");
+      }
+      this.doUnSubscribe();
+    })
+
   }
 
   accionPuerta(){
-    console.log("Se abrió la puerta");
+    this.mostrarGrafica = false;
+    this.mostrarUnidades = true;
+    this.mostrarTabla = false;
+    console.log("action", "9")
+    this.publish.payload = "9"
+    const { topic, qos, payload } = this.publish
+    console.log(this.publish)
+    this.client?.unsafePublish(topic, payload, { qos } as IPublishOptions)
+    this.subscribePuerta();
   }
 
+  subscribePuerta(){
+    const qos = 0;
+    const topic = "g4Servo";
+    console.log('Subscribiendo al Topic:', topic)
+    this.curSubscription = this.client?.observe(topic, { qos } as IClientSubscribeOptions).subscribe((message: IMqttMessage) => {
+      
+      console.log('Suscripcion al Topic - Respuesta:', message.payload.toString())
+      this.jsonObject = JSON.parse(message.payload.toString());
+      if(this.jsonObject.puerta !== undefined){
+        if(this.jsonObject.puerta == 1){
+          this.puertaAbierta = true;
+          this.minimalSweetAlert('Abriendo puerta.', "info");
+        }else{
+          this.minimalSweetAlert('Cerrando puerta.', "info");
+          this.puertaAbierta = false;
+        }
+      }else{
+        this.minimalSweetAlert('Error al abrir/cerrar la puerta.', "error");
+      }
+      this.doUnSubscribe();
+    })
+
+  }
+
+  velocidadUno(){
+    this.mostrarGrafica = false;
+    this.mostrarUnidades = true;
+    this.mostrarTabla = false;
+    console.log("action", "9")
+    this.publish.payload = "10"
+    const { topic, qos, payload } = this.publish
+    console.log(this.publish)
+    this.client?.unsafePublish(topic, payload, { qos } as IPublishOptions)
+    this.subscribeVelocidadUno();
+  }
+
+  subscribeVelocidadUno(){
+    const qos = 0;
+    const topic = "g4Velocidad";
+    console.log('Subscribiendo al Topic:', topic)
+    this.curSubscription = this.client?.observe(topic, { qos } as IClientSubscribeOptions).subscribe((message: IMqttMessage) => {
+      
+      console.log('Suscripcion al Topic - Respuesta:', message.payload.toString())
+      this.jsonObject = JSON.parse(message.payload.toString());
+      if(this.jsonObject.velocidad !== undefined){
+        if(this.jsonObject.velocidad == 1){
+          this.minimalSweetAlert("Cambiando a velocidad 1.", "info");
+        }else{
+          this.minimalSweetAlert("No se encuentra encendido el ventilador.", "info");
+        }
+      }else{
+        this.minimalSweetAlert('Error al abrir/cerrar la puerta.', "error");
+      }
+      this.doUnSubscribe();
+    })
+
+  }
+
+  velocidadDos(){
+    this.mostrarGrafica = false;
+    this.mostrarUnidades = true;
+    this.mostrarTabla = false;
+    console.log("action", "9")
+    this.publish.payload = "11"
+    const { topic, qos, payload } = this.publish
+    console.log(this.publish)
+    this.client?.unsafePublish(topic, payload, { qos } as IPublishOptions)
+    this.subscribeVelocidadDos();
+  }
+
+  subscribeVelocidadDos(){
+    const qos = 0;
+    const topic = "g4Velocidad";
+    console.log('Subscribiendo al Topic:', topic)
+    this.curSubscription = this.client?.observe(topic, { qos } as IClientSubscribeOptions).subscribe((message: IMqttMessage) => {
+      
+      console.log('Suscripcion al Topic - Respuesta:', message.payload.toString())
+      this.jsonObject = JSON.parse(message.payload.toString());
+      if(this.jsonObject.velocidad !== undefined){  
+        if(this.jsonObject.velocidad == 2){
+          this.minimalSweetAlert("Cambiando a velocidad 2.", "info");
+        }else{
+          this.minimalSweetAlert("No se encuentra encendido el ventilador.", "info")
+        }
+      }else{
+        this.minimalSweetAlert('Error al abrir/cerrar la puerta.', "error");
+      }
+      this.doUnSubscribe();
+    })
+
+  }
 
   // Alertas SweetAlert
+  alertSweet(mensaje: String, icon_type: SweetAlertIcon) {
+    Swal.fire({
+      title: mensaje,
+      icon: icon_type,
+      confirmButtonText: 'Ok'
+    });
+  }
+
   minimalSweetAlert(mensaje: string, icon_type: SweetAlertIcon) {
     const Toast = Swal.mixin({
       toast: true,
