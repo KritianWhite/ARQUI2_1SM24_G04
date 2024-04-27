@@ -367,4 +367,4 @@ El dashboard sugerido para la visualización de los datos obtenidos es el siguie
 
 El dashboard utilizado en grafana es el siguiente:
 
-![](./src/dashboardGrafana.jpeg)
+![](./src/dashboardGrafana.jpg)
