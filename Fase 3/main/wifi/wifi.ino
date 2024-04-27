@@ -117,6 +117,10 @@ void loop()
         String payload = "{\"velocidad\":" + mensaje + "}";
         payload.toCharArray(bufferPublish, 100);
         mqttClient.publish("g4Velocidad", bufferPublish);
+      } else if(numeroTopic == "12"){ // Cambiar estado de la bombilla
+        String payload = "{\"bombilla\":" + mensaje + "}";
+        payload.toCharArray(bufferPublish, 100);
+        mqttClient.publish("g4Bombilla", bufferPublish);
       }
       mensajeArduino = ""; // Reinicia la cadena para la próxima recepción
     }

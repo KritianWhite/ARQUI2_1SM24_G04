@@ -10,12 +10,15 @@
 #include "eeprom.h"
 #include "motor.h"
 #include "puerta.h"
+#include "rele.h"
 
 
 void setup() {
   // Inicializamos la comunicación serial para el log
   Serial.begin(9600);
   Serial2.begin(9600);
+  pinMode(pinBombilla,OUTPUT);
+  digitalWrite(pinBombilla, HIGH);
   pinMode(Trigger, OUTPUT);    // pin como salida
   pinMode(Echo, INPUT);        // pin como entrada
   pinMode(motor1, OUTPUT);     // pin como salida
@@ -28,12 +31,13 @@ void setup() {
   servoPuerta.write(3);
   estadoPuerta = 0;
   estadoMotor = 0;
+  estadoBombilla = 0;
   digitalWrite(motor1, LOW);
   digitalWrite(motor2, LOW);
-  analogWrite(pinVelocidad, velocidad1);
 }
 
 void loop() {
+
   if (Serial2.available()) {
     char c = Serial2.read();
     if (c != '\n') {  // Verifica que no sea el fin de la linea
@@ -62,6 +66,8 @@ void loop() {
         setVelocidadLenta();
       } else if (codigo == "11") {
         setVelocidadRapida();
+      } else if (codigo == "12") {
+        cambiarEstadoBombilla();
       }
       codigo = "";  // Reinicia la cadena para la próxima recepción
     }

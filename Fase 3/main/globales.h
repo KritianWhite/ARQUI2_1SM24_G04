@@ -5,6 +5,8 @@
 
 #define analogFotocelda A1
 
+#define pinBombilla A2
+
 #define DHT_TYPE DHT11
 #define DHT_PIN 7
 
@@ -60,6 +62,8 @@ const int Rc = 10;   // Resistencia calibracion en KΩ
 
 bool estadoMotor = false;
 bool estadoPuerta = false;
+bool estadoBombilla = true;
+
 
 // Conexión a la red wifi: nombre de la red y contraseña
 #define WIFI_AP "Xiaomi 11T Pro"
