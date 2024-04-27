@@ -13,7 +13,7 @@
 ## Control del Ambiente en Dormitorios Inteligentes Implementando Análisis Meteorológico IoT
 
 ### Funcionamiento
-El proyecto se enfoca en el desarrollo de una estación meteorológica IoT para dormitorios inteligentes. Utiliza sensores para recabar datos climáticos en tiempo real y los envía a una plataforma centralizada. Los usuarios pueden visualizar estos datos a través de una aplicación web.
+El proyecto se enfoca en el desarrollo de una solución IoT para dormitorios inteligentes. Utiliza sensores para recabar datos climáticos en tiempo real y los envía a una plataforma centralizada. Los usuarios pueden visualizar estos datos a través de una aplicación web.
 
 ### Usos
 - *Monitoreo Climático:* Permite el seguimiento en tiempo real de condiciones climáticas en la habitación.
@@ -52,6 +52,8 @@ Para esta fase se utilizaron las 5 capas del Smart Connected Design Framework, l
 
 * EEPROM
 
+* Relé
+
 
 ### Software:
 
@@ -61,9 +63,11 @@ Para esta fase se utilizaron las 5 capas del Smart Connected Design Framework, l
 
 3. Linux AWS
 
+4. Broker EMQX
+
 ### Communication
 
-1. Modulo WIFI ESP-01
+1. Modulo WIFI ESP-32
 
 2. Protocolo MQTT
 
@@ -73,9 +77,10 @@ Para esta fase se utilizaron las 5 capas del Smart Connected Design Framework, l
 2. Base de datos en mysql, RDS amazon
 3. Grafana en instancia ec2 amazon
 
+
 ### Cloud Application
 
-1. Frontend en Angular
+1. Frontend en Angular en S3
 
 
 
@@ -295,7 +300,7 @@ EMQX Broker es una plataforma de mensajería MQTT de código abierto y altamente
 
 ## BOCETOS DEL PROTOTIPO
 
-El boceto muestra un cubo con los siguientes componentes:
+El boceto muestra una habitación con los siguientes componentes:
 
 - Sensor de temperatura DHT11 en la cara lateral izquierda.
 
@@ -313,17 +318,26 @@ El boceto muestra un cubo con los siguientes componentes:
 
     - Puertos digitales y analógicos 
 
+-Placa ESP32 con os siguientes componentes:
+    - Modulo wifi
+
+    -Puerto MicroUSB
+
+    - Puertos digitales para transmicion por serial
+
 Se incluyen los siguientes detalles adicionales:
 
 - Cables conectando los sensores a los puertos digitales del Arduino.
 
-- Puntos de montaje de los sensores en las caras del cubo. 
+- Puntos de montaje de los sensores en la pared de la habitación.
 
 - Leyenda identificando cada componente.
 
 - Ventilador DC de 5V
 
 - Puente H L298N para controlar el ventilador
+
+- Motor Servo para abrir y cerrar la puerta de manera segura.
 
 El boceto utilizado para la maqueta de la fase 3 es el siguiente: 
 
